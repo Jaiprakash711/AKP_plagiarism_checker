@@ -3,7 +3,6 @@ package com.AKP.plagiarism.plagiarism_checker.DataModel.Entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,15 +12,16 @@ public class PlagiarismCheckEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private int score;
+    private String service;
+    private String scanTime;
+    private String inputType;
+    private double score;
     private int sourceCounts;
     private int textWordCounts;
     private int totalPlagiarismWords;
     private int identicalWordCounts;
     private int similarWordCounts;
-
-    private LocalDateTime scanTime = LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     public Long getId() {
         return id;
@@ -31,11 +31,35 @@ public class PlagiarismCheckEntity {
         this.id = id;
     }
 
-    public int getScore() {
+    public String getService() {
+        return service;
+    }
+
+    public void setService(String service) {
+        this.service = service;
+    }
+
+    public String getScanTime() {
+        return scanTime;
+    }
+
+    public void setScanTime(String scanTime) {
+        this.scanTime = scanTime;
+    }
+
+    public String getInputType() {
+        return inputType;
+    }
+
+    public void setInputType(String inputType) {
+        this.inputType = inputType;
+    }
+
+    public double getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(double score) {
         this.score = score;
     }
 
@@ -79,12 +103,12 @@ public class PlagiarismCheckEntity {
         this.similarWordCounts = similarWordCounts;
     }
 
-    public LocalDateTime getScanTime() {
-        return scanTime;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setScanTime(LocalDateTime scanTime) {
-        this.scanTime = scanTime;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public UploadTextEntity getUploadText() {

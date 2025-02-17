@@ -7,12 +7,34 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
 <div class="container">
     <h2>Plagiarism Checker</h2>
-    <textarea id="textInput" placeholder="Enter text to check for plagiarism..."></textarea>
-    <button onclick="checkPlagiarism()">Check</button>
-    <div id="result"></div>
+
+    <textarea id="textInput" placeholder="Enter your text here..."></textarea>
+    <button id="checkButton" onclick="checkPlagiarism()">🔍 Check Plagiarism</button>
+
+    <div id="loader" class="hidden">
+        <div class="spinner"></div>
+        <p>Checking for plagiarism...</p>
+    </div>
+
+    <div id="resultContainer" class="hidden">
+        <h3>Plagiarism Report</h3>
+        <div class="report">
+            <div class="report-item"><strong>Service:</strong> <span id="service"></span></div>
+            <div class="report-item"><strong>Scan Time:</strong> <span id="scanTime"></span></div>
+            <div class="report-item"><strong>Input Type:</strong> <span id="inputType"></span></div>
+            <div class="report-item"><strong>Plagiarism Score:</strong> <span id="score"></span></div>
+            <div class="report-item"><strong>Source Counts:</strong> <span id="sourceCounts"></span></div>
+            <div class="report-item"><strong>Word Count:</strong> <span id="textWordCounts"></span></div>
+            <div class="report-item"><strong>Total Plagiarized Words:</strong> <span id="totalPlagiarismWords"></span></div>
+            <div class="report-item"><strong>Identical Words:</strong> <span id="identicalWordCounts"></span></div>
+            <div class="report-item"><strong>Similar Words:</strong> <span id="similarWordCounts"></span></div>
+        </div>
+    </div>
 </div>
+
 <script src="script.js"></script>
 </body>
 </html>

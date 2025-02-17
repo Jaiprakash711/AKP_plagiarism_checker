@@ -1,19 +1,23 @@
 package com.AKP.plagiarism.plagiarism_checker.DataModel.Entity;
+
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import java.time.LocalDateTime;
+
+import java.util.Date;
 
 @Entity
-@Getter
-@Setter
+@Table(name = "upload_text_entity")
 public class UploadTextEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String text;
+    @Column(name = "text_content", columnDefinition = "LONGTEXT", nullable = false)
+    private String textContent;  // Updated from "text" to "textContent"
+
+    @Column(name = "created_at", updatable = false, nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt = new Date();
 
     public Long getId() {
         return id;
@@ -23,21 +27,20 @@ public class UploadTextEntity {
         this.id = id;
     }
 
-    public String getText() {
-        return text;
+    public String getTextContent() {
+        return textContent;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setTextContent(String textContent) {
+        this.textContent = textContent;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
-
-    private LocalDateTime createdAt = LocalDateTime.now();
+// Getters and Setters
 }

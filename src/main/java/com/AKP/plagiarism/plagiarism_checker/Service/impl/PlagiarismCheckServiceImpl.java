@@ -1,111 +1,119 @@
-//package com.AKP.plagiarism.plagiarism_checker.Service.impl;
-//
-//import com.AKP.plagiarism.plagiarism_checker.DTO.PlagiarismCheckRequestDTO;
-//import com.AKP.plagiarism.plagiarism_checker.DTO.PlagiarismCheckResponseDTO;
-//import com.AKP.plagiarism.plagiarism_checker.DataModel.Entity.PlagiarismCheckEntity;
-//import com.AKP.plagiarism.plagiarism_checker.DataModel.Entity.UploadTextEntity;
-//import com.AKP.plagiarism.plagiarism_checker.DataModel.Repository.PlagiarismCheckRepository;
-//import com.AKP.plagiarism.plagiarism_checker.DataModel.Repository.UploadTextRepository;
-//import com.AKP.plagiarism.plagiarism_checker.Service.PlagiarismCheckService;
-//import com.fasterxml.jackson.databind.ObjectMapper;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.*;
-//import org.springframework.stereotype.Service;
-//import org.springframework.web.client.RestTemplate;
-//
-//@Service
-//public class PlagiarismCheckServiceImpl implements PlagiarismCheckService {
-//
-//    @Autowired
-//    private UploadTextRepository uploadTextRepository;
-//
-//    @Autowired
-//    private PlagiarismCheckRepository plagiarismCheckRepository;
-//
-//    // Hardcoded API credentials
-//    private static final String API_URL = "https://api.gowinston.ai/v2/plagiarism";
-//    private static final String TOKEN = "FezqKNGx96fb1GMQU5s4veHld3Q1Dc24UuQkfDXt7a0628ca";
-//
-//    @Override
-//    public PlagiarismCheckResponseDTO checkPlagiarism(PlagiarismCheckRequestDTO requestDTO) {
-//        // Save uploaded text to DB
-//        UploadTextEntity uploadText = new UploadTextEntity();
-//        uploadText.setText(requestDTO.getText());
-//        uploadTextRepository.save(uploadText);
-//
-//        // Prepare API request headers
-//        RestTemplate restTemplate = new RestTemplate();
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//        headers.setBearerAuth(TOKEN);
-//
-//        // Ensure required request payload format
-//        PlagiarismCheckRequestDTO requestPayload = new PlagiarismCheckRequestDTO();
-//        requestPayload.setText(requestDTO.getText());
-//        //requestPayload.setExcludedSources(Collections.emptyList()); // Required field
-//        //requestPayload.setLanguage("en"); // Required field
-//        //requestPayload.setCountry("us"); // Required field
-//
-//        // Send request to API
-//        HttpEntity<PlagiarismCheckRequestDTO> request = new HttpEntity<>(requestPayload, headers);
-//        ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, request, String.class);
-//
-//        try {
-//            // Convert API response to DTO
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            PlagiarismCheckResponseDTO responseDTO = objectMapper.readValue(response.getBody(), PlagiarismCheckResponseDTO.class);
-//
-//            // Save API response to DB
-//            PlagiarismCheckEntity entity = new PlagiarismCheckEntity();
-//            entity.setScore(responseDTO.getScore());
-//            entity.setSourceCounts(responseDTO.getSourceCounts());
-//            entity.setTextWordCounts(responseDTO.getTextWordCounts());
-//            entity.setTotalPlagiarismWords(responseDTO.getTotalPlagiarismWords());
-//            entity.setIdenticalWordCounts(responseDTO.getIdenticalWordCounts());
-//            entity.setSimilarWordCounts(responseDTO.getSimilarWordCounts());
-//            entity.setUploadText(uploadText);
-//
-//            plagiarismCheckRepository.save(entity);
-//
-//            return responseDTO;
-//        } catch (Exception e) {
-//            throw new RuntimeException("Failed to process plagiarism response", e);
-//        }
-//    }
-//}
+
 package com.AKP.plagiarism.plagiarism_checker.Service.impl;
 
 import com.AKP.plagiarism.plagiarism_checker.DTO.PlagiarismCheckRequestDTO;
+import com.AKP.plagiarism.plagiarism_checker.DTO.PlagiarismCheckResponseDTO;
 import com.AKP.plagiarism.plagiarism_checker.Service.PlagiarismCheckService;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Collections;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import java.util.Map;
 
 @Service
 public class PlagiarismCheckServiceImpl implements PlagiarismCheckService {
 
-    private static final String API_URL = "https://api.gowinston.ai/v2/plagiarism";
-    private static final String TOKEN = "FezqKNGx96fb1GMQU5s4veHld3Q1Dc24UuQkfDXt7a0628ca";
+    private static final String WINSTON_API_URL = "https://api.gowinston.ai/v2/plagiarism";
+    private static final String BEARER_TOKEN = "9kGGNtNjOhy6We5X4BXsq4fUnGymJff0PPoEP8UL0ddeaf66";
 
     @Override
-    public String checkPlagiarism(PlagiarismCheckRequestDTO requestDTO) {
-        // Ensure required fields are set
-        if (requestDTO.getExcludedSources() == null) {
-            requestDTO.setExcludedSources(Collections.emptyList());
-        }
-        requestDTO.setLanguage("en");
-        requestDTO.setCountry("us");
-
+    public PlagiarismCheckResponseDTO checkPlagiarism(PlagiarismCheckRequestDTO requestDTO) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(TOKEN);
+        headers.set("Authorization", "Bearer " + BEARER_TOKEN);
+        headers.set("Content-Type", "application/json");
 
-        HttpEntity<PlagiarismCheckRequestDTO> request = new HttpEntity<>(requestDTO, headers);
-        ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, request, String.class);
+        Map<String, String> requestBody = Map.of("text", requestDTO.getText());
+        HttpEntity<Map<String, String>> entity = new HttpEntity<>(requestBody, headers);
 
-        return response.getBody(); // Return raw API response
+        try {
+            ResponseEntity<WinstonApiResponse> response = restTemplate.exchange(
+                    WINSTON_API_URL, HttpMethod.POST, entity, WinstonApiResponse.class);
+
+            if (response.getBody() != null) {
+                WinstonApiResponse responseBody = response.getBody();
+                return new PlagiarismCheckResponseDTO(
+                        responseBody.getScanInformation().getService(),
+                        responseBody.getScanInformation().getScanTime(),
+                        responseBody.getScanInformation().getInputType(),
+                        responseBody.getResult().getScore(),
+                        responseBody.getResult().getSourceCounts(),
+                        responseBody.getResult().getTextWordCounts(),
+                        responseBody.getResult().getTotalPlagiarismWords(),
+                        responseBody.getResult().getIdenticalWordCounts(),
+                        responseBody.getResult().getSimilarWordCounts()
+                );
+            }
+        } catch (Exception e) {
+            return new PlagiarismCheckResponseDTO("", "", "", 0.0, 0, 0, 0, 0, 0);
+        }
+        return new PlagiarismCheckResponseDTO("", "", "", 0.0, 0, 0, 0, 0, 0);
+    }
+
+    private static class WinstonApiResponse {
+        private int status;
+        private ScanInformation scanInformation;
+        private Result result;
+
+        public ScanInformation getScanInformation() {
+            return scanInformation;
+        }
+
+        public Result getResult() {
+            return result;
+        }
+    }
+
+    private static class ScanInformation {
+        private String service;
+        private String scanTime;
+        private String inputType;
+
+        public String getService() {
+            return service;
+        }
+
+        public String getScanTime() {
+            return scanTime;
+        }
+
+        public String getInputType() {
+            return inputType;
+        }
+    }
+
+    private static class Result {
+        private double score;
+        private int sourceCounts;
+        private int textWordCounts;
+        private int totalPlagiarismWords;
+        private int identicalWordCounts;
+        private int similarWordCounts;
+
+        public double getScore() {
+            return score;
+        }
+
+        public int getSourceCounts() {
+            return sourceCounts;
+        }
+
+        public int getTextWordCounts() {
+            return textWordCounts;
+        }
+
+        public int getTotalPlagiarismWords() {
+            return totalPlagiarismWords;
+        }
+
+        public int getIdenticalWordCounts() {
+            return identicalWordCounts;
+        }
+
+        public int getSimilarWordCounts() {
+            return similarWordCounts;
+        }
     }
 }

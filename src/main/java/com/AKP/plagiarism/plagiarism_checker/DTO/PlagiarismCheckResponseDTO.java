@@ -1,23 +1,58 @@
 package com.AKP.plagiarism.plagiarism_checker.DTO;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class PlagiarismCheckResponseDTO {
-    private int score;
+    private String service;
+    private String scanTime;
+    private String inputType;
+    private double score;
     private int sourceCounts;
-    private int textWordCounts;
-    private int totalPlagiarismWords;
-    private int identicalWordCounts;
 
-    public int getScore() {
+    public PlagiarismCheckResponseDTO(String service, String scanTime, String inputType, double score, int sourceCounts, int textWordCounts, int totalPlagiarismWords, int identicalWordCounts, int similarWordCounts) {
+        this.service = service;
+        this.scanTime = scanTime;
+        this.inputType = inputType;
+        this.score = score;
+        this.sourceCounts = sourceCounts;
+        this.textWordCounts = textWordCounts;
+        this.totalPlagiarismWords = totalPlagiarismWords;
+        this.identicalWordCounts = identicalWordCounts;
+        this.similarWordCounts = similarWordCounts;
+    }
+
+    public String getService() {
+        return service;
+    }
+
+    public void setService(String service) {
+        this.service = service;
+    }
+
+    public String getScanTime() {
+        return scanTime;
+    }
+
+    public void setScanTime(String scanTime) {
+        this.scanTime = scanTime;
+    }
+
+    public String getInputType() {
+        return inputType;
+    }
+
+    public void setInputType(String inputType) {
+        this.inputType = inputType;
+    }
+
+    public double getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(double score) {
         this.score = score;
     }
 
@@ -61,5 +96,8 @@ public class PlagiarismCheckResponseDTO {
         this.similarWordCounts = similarWordCounts;
     }
 
+    private int textWordCounts;
+    private int totalPlagiarismWords;
+    private int identicalWordCounts;
     private int similarWordCounts;
 }
