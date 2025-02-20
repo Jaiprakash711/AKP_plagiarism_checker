@@ -1,6 +1,4 @@
-
 package com.AKP.plagiarism.plagiarism_checker.Service.impl;
-
 import com.AKP.plagiarism.plagiarism_checker.DTO.PlagiarismCheckRequestDTO;
 import com.AKP.plagiarism.plagiarism_checker.DTO.PlagiarismCheckResponseDTO;
 import com.AKP.plagiarism.plagiarism_checker.Service.PlagiarismCheckService;
@@ -16,7 +14,7 @@ import java.util.Map;
 public class PlagiarismCheckServiceImpl implements PlagiarismCheckService {
 
     private static final String WINSTON_API_URL = "https://api.gowinston.ai/v2/plagiarism";
-    private static final String BEARER_TOKEN = "9kGGNtNjOhy6We5X4BXsq4fUnGymJff0PPoEP8UL0ddeaf66";
+    private static final String BEARER_TOKEN = "zyN2NzRI4Gcle7B56WeXFvEZ7CfKQkm7l6grpb6La19f447a";
 
     @Override
     public PlagiarismCheckResponseDTO checkPlagiarism(PlagiarismCheckRequestDTO requestDTO) {
