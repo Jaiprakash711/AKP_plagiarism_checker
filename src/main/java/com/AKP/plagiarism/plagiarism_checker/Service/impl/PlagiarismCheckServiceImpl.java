@@ -14,7 +14,7 @@ import java.util.Map;
 public class PlagiarismCheckServiceImpl implements PlagiarismCheckService {
 
     private static final String WINSTON_API_URL = "https://api.gowinston.ai/v2/plagiarism";
-    private static final String BEARER_TOKEN = "zyN2NzRI4Gcle7B56WeXFvEZ7CfKQkm7l6grpb6La19f447a";
+    private static final String BEARER_TOKEN = "xCsA8SilRUpqCt9O427Ixd8TjiDLri6KNuIts5OKd3b4477f";
 
     @Override
     public PlagiarismCheckResponseDTO checkPlagiarism(PlagiarismCheckRequestDTO requestDTO) {
