@@ -1,46 +1,30 @@
 package com.AKP.plagiarism.plagiarism_checker.DataModel.Entity;
 
 import jakarta.persistence.*;
-
-import java.util.Date;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "upload_text_entity")
 public class UploadTextEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "upload_text_seq")
+    @SequenceGenerator(name = "upload_text_seq", sequenceName = "upload_text_seq", allocationSize = 1)
     private Long id;
 
-    @Column(name = "text_content", columnDefinition = "LONGTEXT", nullable = false)
-    private String textContent;  // Updated from "text" to "textContent"
+    @Column(name = "text_content", columnDefinition = "TEXT", nullable = false)
+    private String textContent;  // Use TEXT instead of LONGTEXT
 
-    @Column(name = "created_at", updatable = false, nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt = new Date();
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTextContent() {
-        return textContent;
-    }
-
-    public void setTextContent(String textContent) {
-        this.textContent = textContent;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-// Getters and Setters
+    @OneToMany(mappedBy = "uploadText", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PlagiarismCheckEntity> plagiarismChecks;
 }

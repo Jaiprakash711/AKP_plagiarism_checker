@@ -1,5 +1,4 @@
 package com.AKP.plagiarism.plagiarism_checker.Controller;
-
 import com.AKP.plagiarism.plagiarism_checker.DTO.PlagiarismCheckRequestDTO;
 import com.AKP.plagiarism.plagiarism_checker.DTO.PlagiarismCheckResponseDTO;
 import com.AKP.plagiarism.plagiarism_checker.Service.PlagiarismCheckService;
