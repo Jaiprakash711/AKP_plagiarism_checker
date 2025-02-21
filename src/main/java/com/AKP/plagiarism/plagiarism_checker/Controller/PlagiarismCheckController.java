@@ -5,7 +5,8 @@ import com.AKP.plagiarism.plagiarism_checker.Service.PlagiarismCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:63342")  // Allow only frontend origin
+@CrossOrigin(origins = { "https://akp-plagiarism-checker.onrender.com",
+        "https://akp-plagiarism-checker-front-end.onrender.com"})  // Allow only frontend origin
 @RestController
 @RequestMapping("/api/plagiarism")
 public class PlagiarismCheckController {
