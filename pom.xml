@@ -49,12 +49,17 @@
 <!--			<artifactId>flyway-mysql</artifactId>-->
 <!--		</dependency>-->
 
+<!--		<dependency>-->
+<!--			<groupId>org.flywaydb</groupId>-->
+<!--			<artifactId>flyway-core</artifactId>-->
+<!--			<version>10.10.0</version> &lt;!&ndash; Latest stable version &ndash;&gt;-->
+<!--		</dependency>-->
+
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
-			<version>10.10.0</version> <!-- Latest stable version -->
+			<version>9.22.3</version>
 		</dependency>
-
 
 
 
